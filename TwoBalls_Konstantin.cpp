@@ -1,6 +1,7 @@
 #include "TXLib.h"
 
-void MoveBalls();
+void MoveBalls ();
+void ScoreDraw (int hits);
 
 int main()
     {
@@ -11,7 +12,7 @@ int main()
     return 0;
     }
 
-void MoveBalls()
+void MoveBalls ()
     {
     int x  = 50, y  = 50, x1  = 750, y1  = 550,
         vx =  3, vy =  3, vx1 =   3, vy1 =   3,
@@ -24,6 +25,8 @@ void MoveBalls()
         {
         txSetFillColor (TX_BLACK);
         txClear();
+
+        ScoreDraw (hit);
 
         txCircle (x,  y,  r);
         txCircle (x1, y1, r);
@@ -43,6 +46,7 @@ void MoveBalls()
             txPlaySound    ("sounds/ball_sound.wav");
             txSetColor     (RGB (x,   y,   100), 2);
             txSetFillColor (RGB (x/2, y/2, 100));
+
             hit++;
             }
 
@@ -101,6 +105,24 @@ void MoveBalls()
 
         txSleep (5);
         }
-    printf("Hits = %d\n", hit);
     }
+
+//-------------------------------------------------------------
+
+void ScoreDraw (int hits)
+    {
+    char str[12] = "";
+    sprintf (str, "Hits = %d", hits);
+
+    int centerX = txGetExtentX()/2;
+
+    int textSizeX = txGetTextExtentX ("Hits = ---"),
+        textSizeY = txGetTextExtentY ("Hits = ---");
+
+    txSetFillColor (TX_BLACK);
+    txRectangle (centerX - textSizeX, 0,
+                 centerX + textSizeX, textSizeY);
+    txTextOut   (centerX - 20, 0, str);
+    }
+
 
