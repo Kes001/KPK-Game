@@ -53,6 +53,8 @@ void MoveBall ()
         }
      }
 
+//-------------------------------------------------------------
+
 void PhysicsBall (int* x, int* y, int* vx, int* vy, int* ax, int* ay, int dt, int r)
     {
     *vx += (*ax) * dt;
@@ -114,6 +116,7 @@ void DrawBall (int x, int y, int vx, int vy, int r, COLORREF color, COLORREF fil
 
 void ScoreDraw (int hits)
     {
+    txSelectFont ("TimesNewRoman", 50);
     char str[12] = "";
     sprintf (str, "Hits = %d", hits);
 
@@ -125,14 +128,14 @@ void ScoreDraw (int hits)
     txSetFillColor (TX_BLACK);
     txRectangle (centerX - textSizeX, 0,
                  centerX + textSizeX, textSizeY);
-    txTextOut   (centerX - 20, 0, str);
+    txTextOut   (centerX - textSizeX/2, 0, str);
     }
 
 //-------------------------------------------------------------
 
 void Collision (int x1, int y1, int x2, int y2, int* vx1, int* vy1, int* vx2, int* vy2, int r1, int r2, int* hit)
     {
-    if (pow(x1 - x2, 2) + pow(y1 - y2, 2) <= 4*r1*r2)
+    if (pow(x1 - x2, 2) + pow(y1 - y2, 2) <= r1*r1 + 2*r1*r2 + r2*r2)
         {
         *vx2 = -(*vx2);
         *vy2 = -(*vy2);
