@@ -4,7 +4,8 @@ void MoveBall  ();
 
 void PhysicsBall (int* x, int* y, int* vx, int* vy, int* ax, int* ay, int dt, int r);
 void DrawBall    (int  x, int  y, int  vx, int  vy, int   r, COLORREF color, COLORREF fillcolor);
-void Collision   (int x1, int y1, int  x2, int  y2, int* vx1, int* vy1, int* vx2, int* vy2, int r1, int r2, int* hit);
+void Collision   (int x1, int y1, int  x2, int  y2,
+                  int* vx1, int* vy1, int* vx2, int* vy2, int r1, int r2, int* hit);
 void ControlBall (int* vx, int* vy);
 void ScoreDraw   (int hits);
 
