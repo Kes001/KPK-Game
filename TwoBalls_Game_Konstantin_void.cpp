@@ -8,7 +8,7 @@ void Collision   (int x1, int y1, int  x2, int  y2,
                   int* vx1, int* vy1, int* vx2, int* vy2, int r1, int r2);
 void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3);
 void ScoreDraw   (int score1, int score2);
-void Score       (int x, int y, int r2, int* score1, int* score2);
+void ScoreCount  (int x, int y, int r2, int* score1, int* score2);
 
 int main()
     {
@@ -38,7 +38,7 @@ void MoveBall (HDC fon)
         ax3 =   0, ay3 =  1,
         r3  =  20;
 
-    int dt  = 1;
+    int dt     = 1;
     int score1 = 0;
     int score2 = 0;
 
@@ -47,13 +47,13 @@ void MoveBall (HDC fon)
         //txSetFillColor (TX_BLACK);
         //txClear();
 
-        txBitBlt (txDC(), 0, 0, 800, 600, fon, 0, 0);
+        txBitBlt  (txDC(), 0, 0, 800, 600, fon, 0, 0);
 
         ScoreDraw (score1, score2);
 
-        DrawBall (x1, y1, vx1, vy1, r1, TX_LIGHTRED, TX_RED);
-        DrawBall (x2, y2, vx2, vy2, r2, TX_LIGHTBLUE, TX_BLUE);
-        DrawBall (x3, y3, vx3, vy3, r3, TX_GREEN, TX_GREEN);
+        DrawBall  (x1, y1, vx1, vy1, r1, TX_LIGHTRED, TX_RED);
+        DrawBall  (x2, y2, vx2, vy2, r2, TX_LIGHTBLUE, TX_BLUE);
+        DrawBall  (x3, y3, vx3, vy3, r3, TX_GREEN, TX_GREEN);
 
         PhysicsBall (&x1, &y1, &vx1, &vy1, &ax1, &ay1, dt, r1);
         PhysicsBall (&x2, &y2, &vx2, &vy2, &ax2, &ay2, dt, r2);
@@ -65,7 +65,7 @@ void MoveBall (HDC fon)
         Collision   (x3, y3, x2, y2, &vx3, &vy3, &vx2, &vy2, r1, r2);
         Collision   (x1, y1, x3, y3, &vx1, &vy1, &vx3, &vy3, r1, r2);
 
-        Score (x2, y2, r2, &score1, &score2);
+        ScoreCount (x2, y2, r2, &score1, &score2);
 
         txSleep (10);
         }
@@ -80,8 +80,8 @@ void PhysicsBall (int* x, int* y, int* vx, int* vy, int* ax, int* ay, int dt, in
     *vx += (*ax) * dt;
     *vy += (*ay) * dt;
 
-    *x  += (*vx)  * dt;
-    *y  += (*vy)  * dt;
+    *x  += (*vx) * dt;
+    *y  += (*vy) * dt;
 
     if (*x > 800 - r)
         {
@@ -122,7 +122,7 @@ void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3)
     if (txGetAsyncKeyState ('W')) *vy3 = *vy3 - 1;
     if (txGetAsyncKeyState ('S')) *vy3 = *vy3 + 1;
 
-    if (txGetAsyncKeyState (VK_SPACE)) *vx1 = *vy1 = *vx3 = *vy3= 0;
+    if (txGetAsyncKeyState (VK_SPACE)) *vx1 = *vy1 = *vx3 = *vy3 = 0;
     }
 
 //-------------------------------------------------------------
@@ -173,13 +173,13 @@ void Collision (int x1, int y1, int x2, int y2, int* vx1, int* vy1, int* vx2, in
 
 //-------------------------------------------------------------
 
-void Score (int x, int y, int r2, int* score1, int* score2)
+void ScoreCount (int x, int y, int r2, int* score1, int* score2)
     {
-    if ((355 > y) && (y > 240) && ((x + r2) > 799))
+    if ((355 > y) && (y > 240) && (x + r2 > 799))
         {
         *score1 = *score1 + 1;
         }
-    if ((y > 240) && (y < 355) && ((x - r2) < 1))
+    if ((y > 240) && (y < 355) && (x - r2 < 1))
         {
         *score2 = *score2 + 1;
         }
