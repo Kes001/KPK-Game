@@ -7,8 +7,9 @@ void DrawBall    (int  x, int  y, int  vx, int  vy, int   r, COLORREF color, COL
 void Collision   (int* vx1, int* vy1, int* vx2, int* vy2);
 void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3);
 void ScoreDraw   (int score1, int score2);
-void ScoreCount  (int x, int y, int r2, int* score1, int* score2);
 
+bool LeftGool  (int x, int y, int r2);
+bool RightGool (int x, int y, int r2);
 double Distance (double x1, double y1, double x2, double y2);
 
 int main()
@@ -66,7 +67,8 @@ void MoveBall (HDC fon)
         if (Distance (x3, y3, x2, y2) <= r2 + r3) Collision (&vx3, &vy3, &vx2, &vy2);
         if (Distance (x1, y1, x3, y3) <= r1 + r3) Collision (&vx1, &vy1, &vx3, &vy3);
 
-        ScoreCount (x2, y2, r2, &score1, &score2);
+        if (LeftGool  (x2, y2, r2)) score1++;
+        if (RightGool (x2, y2, r2)) score2++;
 
         txSleep (10);
         }
@@ -125,7 +127,7 @@ void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3)
     if (txGetAsyncKeyState (VK_UP))    *vy1 = *vy1 - 1;
     if (txGetAsyncKeyState (VK_DOWN))  *vy1 = *vy1 + 1;
 
-    if (txGetAsyncKeyState ('F')) *vx3 = *vx3 + 1;
+    if (txGetAsyncKeyState ('D')) *vx3 = *vx3 + 1;
     if (txGetAsyncKeyState ('A')) *vx3 = *vx3 - 1;
     if (txGetAsyncKeyState ('W')) *vy3 = *vy3 - 1;
     if (txGetAsyncKeyState ('S')) *vy3 = *vy3 + 1;
@@ -178,14 +180,14 @@ void Collision (int* vx1, int* vy1, int* vx2, int* vy2)
 
 //-------------------------------------------------------------
 
-void ScoreCount (int x, int y, int r2, int* score1, int* score2)
+bool LeftGool (int x, int y, int r2)
     {
-    if ((355 > y) && (y > 240) && (x + r2 > 799))
-        {
-        *score1 = *score1 + 1;
-        }
-    if ((y > 240) && (y < 355) && (x - r2 < 1))
-        {
-        *score2 = *score2 + 1;
-        }
+    return (355 > y) && (y > 240) && (x + r2 > 799);
+    }
+
+//-------------------------------------------------------------
+
+bool RightGool (int x, int y, int r2)
+    {
+    return (y > 240) && (y < 355) && (x - r2 < 1);
     }
