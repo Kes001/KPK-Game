@@ -55,7 +55,7 @@ void MoveBall (HDC fon)
 
         DrawBall  (x1, y1, vx1, vy1, r1, TX_LIGHTRED, TX_RED);
         DrawBall  (x2, y2, vx2, vy2, r2, TX_LIGHTBLUE, TX_BLUE);
-        DrawBall  (x3, y3, vx3, vy3, r3, TX_GREEN, TX_GREEN);
+        //DrawBall  (x3, y3, vx3, vy3, r3, TX_GREEN, TX_GREEN);
 
         PhysicsBall (&x1, &y1, &vx1, &vy1, &ax1, &ay1, dt, r1);
         PhysicsBall (&x2, &y2, &vx2, &vy2, &ax2, &ay2, dt, r2);
@@ -122,18 +122,17 @@ void PhysicsBall (int* x, int* y, int* vx, int* vy, int* ax, int* ay, int dt, in
 
 void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3)
     {
-    if (txGetAsyncKeyState (VK_RIGHT)) *vx1 = *vx1 + 2;
-    if (txGetAsyncKeyState (VK_LEFT))  *vx1 = *vx1 - 2;
-    if (txGetAsyncKeyState (VK_UP))    *vy1 = *vy1 - 2;
-    if (txGetAsyncKeyState (VK_DOWN))  *vy1 = *vy1 + 2;
+    if (txGetAsyncKeyState (VK_RIGHT)) *vx1 = *vx1 + 1;
+    if (txGetAsyncKeyState (VK_LEFT))  *vx1 = *vx1 - 1;
+    if (txGetAsyncKeyState (VK_UP))    *vy1 = *vy1 - 1;
+    if (txGetAsyncKeyState (VK_DOWN))  *vy1 = *vy1 + 1;
 
-    if (txGetAsyncKeyState ('D')) *vx3 = *vx3 + 2;
-    if (txGetAsyncKeyState ('A')) *vx3 = *vx3 - 2;
-    if (txGetAsyncKeyState ('W')) *vy3 = *vy3 - 2;
-    if (txGetAsyncKeyState ('S')) *vy3 = *vy3 + 2;
+    if (txGetAsyncKeyState ('D')) *vx3 = *vx3 + 1;
+    if (txGetAsyncKeyState ('A')) *vx3 = *vx3 - 1;
+    if (txGetAsyncKeyState ('W')) *vy3 = *vy3 - 1;
+    if (txGetAsyncKeyState ('S')) *vy3 = *vy3 + 1;
 
-    if (txGetAsyncKeyState (VK_SPACE)) *vx1 = *vy1 =   0;
-    if (txGetAsyncKeyState (VK_SPACE)) *vx3 = *vy3 = 400;
+    if (txGetAsyncKeyState (VK_SPACE)) *vx1 = *vy1 = *vx3 = *vy3 = 0;
     }
 
 //-------------------------------------------------------------
