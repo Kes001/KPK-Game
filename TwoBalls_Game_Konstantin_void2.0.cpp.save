@@ -4,11 +4,12 @@ void MoveBall  (HDC fon);
 
 void PhysicsBall (int* x, int* y, int* vx, int* vy, int* ax, int* ay, int dt, int r);
 void DrawBall    (int  x, int  y, int  vx, int  vy, int   r, COLORREF color, COLORREF fillcolor);
-void Collision   (int x1, int y1, int  x2, int  y2,
-                  int* vx1, int* vy1, int* vx2, int* vy2);
+void Collision   (int* vx1, int* vy1, int* vx2, int* vy2);
 void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3);
 void ScoreDraw   (int score1, int score2);
 void ScoreCount  (int x, int y, int r2, int* score1, int* score2);
+
+double Distance (double x1, double y1, double x2, double y2);
 
 int main()
     {
@@ -60,14 +61,10 @@ void MoveBall (HDC fon)
         PhysicsBall (&x3, &y3, &vx3, &vy3, &ax3, &ay3, dt, r3);
 
         ControlBall (&x1, &y1, &x3, &y3);
-        
-        double dist = Distance (x1, y1, x2, y2);
-        
-        if (dist <= r1 + r2) Collision (x1, y1, x2, y2, &vx1, &vy1, &vx2, &vy2);   
-        if (dist <= r2 + r3)
-        
-        Collision   (x3, y3, x2, y2, &vx3, &vy3, &vx2, &vy2);
-        Collision   (x1, y1, x3, y3, &vx1, &vy1, &vx3, &vy3);
+
+        if (Distance (x1, y1, x2, y2) <= r1 + r2) Collision (&vx1, &vy1, &vx2, &vy2);
+        if (Distance (x3, y3, x2, y2) <= r2 + r3) Collision (&vx3, &vy3, &vx2, &vy2);
+        if (Distance (x1, y1, x3, y3) <= r1 + r3) Collision ( &vx1, &vy1, &vx3, &vy3);
 
         ScoreCount (x2, y2, r2, &score1, &score2);
 
@@ -75,6 +72,13 @@ void MoveBall (HDC fon)
         }
 
     txDeleteDC (fon);
+    }
+
+//-------------------------------------------------------------
+
+double Distance (double x1, double y1, double x2, double y2)
+    {
+    return sqrt ((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
     }
 
 //-------------------------------------------------------------
@@ -162,7 +166,7 @@ void ScoreDraw (int score1, int score2)
 
 //-------------------------------------------------------------
 
-void Collision (int x1, int y1, int x2, int y2, int* vx1, int* vy1, int* vx2, int* vy2)
+void Collision (int* vx1, int* vy1, int* vx2, int* vy2)
     {
     *vx2 = -(*vx2);
     *vy2 = -(*vy2);
