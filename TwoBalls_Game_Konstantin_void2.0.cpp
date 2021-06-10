@@ -48,7 +48,7 @@ void MoveBall (HDC fon)
         {
         //txSetFillColor (TX_BLACK);
         //txClear();
-
+        txBegin ();
         txBitBlt  (txDC(), 0, 0, 800, 600, fon, 0, 0);
 
         ScoreDraw (score1, score2);
@@ -70,6 +70,7 @@ void MoveBall (HDC fon)
         if (LeftGool  (x2, y2, r2)) score1++;
         if (RightGool (x2, y2, r2)) score2++;
 
+        txEnd ();
         txSleep (10);
         }
 
@@ -140,18 +141,21 @@ void ControlBall (int* vx1, int* vy1, int* vx3, int* vy3)
 
 void DrawBall (int x, int y, int vx, int vy, int r, COLORREF color, COLORREF fillcolor)
     {
+    txBegin ();
     txSetColor (color, 2);
     txSetFillColor (fillcolor);
 
     txCircle (x, y, r);
     txLine   (x, y, x + vx*5, y + vy*5);
     txCircle (x + vx*5, y + vy*5, 3);
+    txEnd ();
     }
 
 //-------------------------------------------------------------
 
 void ScoreDraw (int score1, int score2)
     {
+    txBegin ();
     txSelectFont ("TimesNewRoman", 50);
     char str[12] = "";
     sprintf (str, "%d : %d", score1, score2);
@@ -165,6 +169,7 @@ void ScoreDraw (int score1, int score2)
     txRectangle (centerX - textSizeX, 0,
                  centerX + textSizeX, textSizeY);
     txTextOut   (centerX - textSizeX/2, 0, str);
+    txEnd ();
     }
 
 //-------------------------------------------------------------
