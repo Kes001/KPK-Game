@@ -2,17 +2,25 @@
 
 void MoveBall  (HDC fon);
 
-struct Ball;
+struct Ball
+    {
+    int x,  y,
+        vx, vy;
+    int r;
 
-void PhysicsBall (Ball* ball, int ax, int ay, int dt);
-void DrawBall    (Ball ball);
-void Collision   (Ball* ball1, Ball* ball2);
-void ControlBall (Ball* ball1, Ball* ball2);
+    COLORREF color;
+    COLORREF fillcolor;
+    };
+
+void PhysicsBall (struct Ball* ball, int ax, int ay, int dt);
+void DrawBall    (struct Ball ball);
+void Collision   (struct Ball* ball1, struct Ball* ball2);
+void ControlBall (struct Ball* ball1, struct Ball* ball2);
 void ScoreDraw   (int score1, int score2);
 
-bool LeftGool   (Ball ball);
-bool RightGool  (Ball ball);
-double Distance (Ball ball1, Ball ball2);
+bool LeftGool   (struct Ball ball);
+bool RightGool  (struct Ball ball);
+double Distance (struct Ball ball1, struct Ball ball2);
 
 int main()
     {
@@ -24,18 +32,6 @@ int main()
 
     return 0;
     }
-
- //-------------------------------------------------------------
-
-struct Ball
-    {
-    int x,  y,
-        vx, vy;
-    int r;
-
-    COLORREF color;
-    COLORREF fillcolor;
-    };
 
 //-------------------------------------------------------------
 
@@ -82,14 +78,14 @@ void MoveBall (HDC fon)
 
 //-------------------------------------------------------------
 
-double Distance (Ball ball1, Ball ball2)
+double Distance (struct Ball ball1, struct Ball ball2)
     {
     return sqrt ((ball1.x - ball2.x)*(ball1.x - ball2.x) + (ball1.y - ball2.y)*(ball1.y - ball2.y));
     }
 
 //-------------------------------------------------------------
 
-void PhysicsBall (Ball* ball, int ax, int ay, int dt)
+void PhysicsBall (struct Ball* ball, int ax, int ay, int dt)
     {
     (*ball).vx = (*ball).vx + ax * dt;
     (*ball).vy = (*ball).vy + ay * dt;
@@ -124,7 +120,7 @@ void PhysicsBall (Ball* ball, int ax, int ay, int dt)
 
 //-------------------------------------------------------------
 
-void ControlBall (Ball* ball1, Ball* ball2)
+void ControlBall (struct Ball* ball1, struct Ball* ball2)
     {
     if (txGetAsyncKeyState (VK_RIGHT)) (*ball2).vx = (*ball2).vx + 1;
     if (txGetAsyncKeyState (VK_LEFT))  (*ball2).vx = (*ball2).vx - 1;
@@ -142,7 +138,7 @@ void ControlBall (Ball* ball1, Ball* ball2)
 
 //-------------------------------------------------------------
 
-void DrawBall (Ball ball)
+void DrawBall (struct Ball ball)
     {
     txBegin ();
     txSetColor (ball.color, 2);
@@ -177,7 +173,7 @@ void ScoreDraw (int score1, int score2)
 
 //-------------------------------------------------------------
 
-void Collision   (Ball* ball1, Ball* ball2)
+void Collision   (struct Ball* ball1, struct Ball* ball2)
     {
     (*ball1).vx = -(*ball1).vx;
     (*ball1).vy = -(*ball1).vy;
@@ -189,14 +185,14 @@ void Collision   (Ball* ball1, Ball* ball2)
 
 //-------------------------------------------------------------
 
-bool LeftGool (Ball ball)
+bool LeftGool (struct Ball ball)
     {
     return (355 > ball.y) && (ball.y > 240) && (ball.x + ball.r >= 800);
     }
 
 //-------------------------------------------------------------
 
-bool RightGool (Ball ball)
+bool RightGool (struct Ball ball)
     {
     return (ball.y > 240) && (ball.y < 355) && (ball.x - ball.r <= 0);
     }
