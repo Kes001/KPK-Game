@@ -10,6 +10,12 @@ struct Ball
 
     COLORREF color;
     COLORREF fillcolor;
+
+    void Draw    ();
+    void Physics (double ax, double ay, int dt);
+
+    bool LeftGool  ();
+    bool RightGool ();
     };
 
 struct ControlType
@@ -17,15 +23,11 @@ struct ControlType
     int key_left, key_right, key_up, key_down;
     };
 
-void PhysicsBall (struct Ball* ball, int ax, int ay, int dt);
-void DrawBall    (struct Ball ball);
 void Collision   (struct Ball* ball1, struct Ball* ball2);
 void ControlBall (struct Ball* ball,  struct ControlType);
 void ScoreDraw   (int score1, int score2);
 
-bool LeftGool   (struct Ball ball);
-bool RightGool  (struct Ball ball);
-double Distance (struct Ball ball1, struct Ball ball2);
+double Distance  (struct Ball ball1, struct Ball ball2);
 
 int main()
     {
@@ -49,9 +51,9 @@ void MoveBall (HDC fon)
     ControlType player1 = {'D', 'A', 'W', 'S'};
     ControlType player2 = {VK_RIGHT, VK_LEFT, VK_UP, VK_DOWN};
 
-    int dt     = 1;
+    int dt = 1;
+    double ax = 0.0, ay = 0.5;
     int score1 = 0, score2 = 0;
-    int     ax = 0,     ay = 1;
 
     while (!txGetAsyncKeyState (VK_ESCAPE))
         {
@@ -60,13 +62,13 @@ void MoveBall (HDC fon)
 
         ScoreDraw (score1, score2);
 
-        DrawBall  (ball1);
-        DrawBall  (ball2);
-        DrawBall  (ball3);
+        ball1.Draw ();
+        ball2.Draw ();
+        ball3.Draw ();
 
-        PhysicsBall (&ball1, ax, ay, dt);
-        PhysicsBall (&ball2, ax, ay, dt);
-        PhysicsBall (&ball3, ax, ay, dt);
+        ball1.Physics (ax, ay, ROUND(dt));
+        ball2.Physics (ax, ay, ROUND(dt));
+        ball3.Physics (ax, ay, ROUND(dt));
 
         ControlBall (&ball1, player1);
         ControlBall (&ball3, player2);
@@ -75,8 +77,8 @@ void MoveBall (HDC fon)
         if (Distance (ball2, ball3) <= ball2.r + ball3.r) Collision (&ball2, &ball3);
         if (Distance (ball1, ball3) <= ball1.r + ball3.r) Collision (&ball1, &ball3);
 
-        if (LeftGool  (ball2)) score1++;
-        if (RightGool (ball2)) score2++;
+        if (ball2.LeftGool  ())  score1++;
+        if (ball2.RightGool ()) score2++;
 
         txEnd ();
         txSleep (10);
@@ -94,36 +96,36 @@ double Distance (struct Ball ball1, struct Ball ball2)
 
 //-------------------------------------------------------------
 
-void PhysicsBall (struct Ball* ball, int ax, int ay, int dt)
+void Ball::Physics (double ax, double ay, int dt)
     {
-    (*ball).vx = (*ball).vx + ax * dt;
-    (*ball).vy = (*ball).vy + ay * dt;
+    (*this).vx = (*this).vx + ROUND(ax * dt);
+    (*this).vy = (*this).vy + ROUND(ay * dt);
 
-    (*ball).x  = (*ball).x + (*ball).vx * dt;
-    (*ball).y  = (*ball).y + (*ball).vy * dt;
+    x = x + ROUND(vx * dt);
+    y = y + ROUND(vy * dt);
 
-    if ((*ball).x > 800 - (*ball).r)
+    if (x > 800 - r)
         {
-        (*ball).vx = -(*ball).vx;
-        (*ball).x  = 800 - (*ball).r;
+        vx = -vx;
+        x  = 800 - r;
         }
 
-    if ((*ball).y > 600 - (*ball).r)
+    if ((*this).y > 600 - (*this).r)
         {
-        (*ball).vy = -(*ball).vy;
-        (*ball).y  = 600 - (*ball).r;
+        (*this).vy = -(*this).vy;
+        (*this).y  = 600 - (*this).r;
         }
 
-    if ((*ball).x < 0 + (*ball).r)
+    if ((*this).x < 0 + (*this).r)
         {
-        (*ball).vx = -(*ball).vx;
-        (*ball).x  = 0 + (*ball).r;
+        (*this).vx = -(*this).vx;
+        (*this).x  = 0 + (*this).r;
         }
 
-    if ((*ball).y < 0 + (*ball).r)
+    if ((*this).y < 0 + (*this).r)
         {
-        (*ball).vy = -(*ball).vy;
-        (*ball).y  = 0 + (*ball).r;
+        (*this).vy = -(*this).vy;
+        (*this).y  = 0 + (*this).r;
         }
     }
 
@@ -141,15 +143,15 @@ void ControlBall (struct Ball* ball, struct ControlType player)
 
 //-------------------------------------------------------------
 
-void DrawBall (struct Ball ball)
+void Ball::Draw ()
     {
     txBegin ();
-    txSetColor (ball.color, 2);
-    txSetFillColor (ball.fillcolor);
+    txSetColor (color, 2);
+    txSetFillColor (fillcolor);
 
-    txCircle (ball.x, ball.y, ball.r);
-    txLine   (ball.x, ball.y, ball.x + ball.vx*5, ball.y + ball.vy*5);
-    txCircle (ball.x + ball.vx*5, ball.y + ball.vy*5, 3);
+    txCircle (x, y, r);
+    txLine   (x, y, x + vx*5, y + vy*5);
+    txCircle (x + vx*5, y + vy*5, 3);
     txEnd ();
     }
 
@@ -188,14 +190,14 @@ void Collision   (struct Ball* ball1, struct Ball* ball2)
 
 //-------------------------------------------------------------
 
-bool LeftGool (struct Ball ball)
+bool Ball::LeftGool ()
     {
-    return (355 > ball.y) && (ball.y > 240) && (ball.x + ball.r >= 800);
+    return (355 > y) && (y > 240) && (x + r >= 800);
     }
 
 //-------------------------------------------------------------
 
-bool RightGool (struct Ball ball)
+bool Ball::RightGool ()
     {
-    return (ball.y > 240) && (ball.y < 355) && (ball.x - ball.r <= 0);
+    return (y > 240) && (y < 355) && (x - r <= 0);
     }
