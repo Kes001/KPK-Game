@@ -52,7 +52,7 @@ void MoveBall (HDC fon)
     ControlType player2 = {VK_RIGHT, VK_LEFT, VK_UP, VK_DOWN};
 
     int dt = 1;
-    double ax = 0.0, ay = 0.5;
+    double ax = 0.0, ay = 0.0;
     int score1 = 0, score2 = 0;
 
     while (!txGetAsyncKeyState (VK_ESCAPE))
